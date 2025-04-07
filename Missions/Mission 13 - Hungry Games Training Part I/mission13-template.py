@@ -19,8 +19,9 @@ class Weapon(Thing):
     ###########
 
     def __init__(self, name, min_dmg, max_dmg):
-        # your code here
-        pass
+        super().__init__(name)
+        self.min_dmg = min_dmg
+        self.max_dmg = max_dmg
 
 
     ###########
@@ -28,20 +29,18 @@ class Weapon(Thing):
     ###########
 
     def min_damage(self):
-        # your code here
-        return
+        return self.min_dmg
 
     def max_damage(self):
-        # your code here
-        return
+        return self.max_dmg
 
     ###########
     # Task 1c #
     ###########
 
     def damage(self):
-        # your code here
-        return
+        dmg_dealt = random.randint(self.min_damage(), self.max_damage())
+        return dmg_dealt
 
 
 def test_task1():
@@ -70,25 +69,33 @@ class Ammo(Thing):
     ###########
     # Task 2a #
     ###########
-    # constructor here
+    def __init__(self, name, weapon, quantity):
+        super().__init__(name)
+        self.weapon = weapon
+        self.quantity = quantity
 
 
     ###########
     # Task 2b #
     ###########
-    # definition of get_quantity here
+    def get_quantity(self):
+        return self.quantity
 
 
     ###########
     # Task 2c #
     ###########
-    # definition of weapon_type here
+    def weapon_type(self):
+        weapon = self.weapon
+        name = weapon.get_name()
+        return name
 
 
     ###########
     # Task 2d #
     ###########
-    # definition of remove_all here
+    def remove_all(self):
+        self.quantity = 0
 
     pass # remove this
 
@@ -102,7 +109,7 @@ def test_task2():
     print(arrows.get_quantity())        # 0
 
 # uncomment to test task2
-#test_task2()
+# test_task2()
 
 
 ############
@@ -114,27 +121,39 @@ class RangedWeapon(Weapon):
     ###########
     # Task 3a #
     ###########
-    # constructor here
+    def __init__(self, name, min_dmg, max_dmg):
+        super().__init__(name, min_dmg, max_dmg)
+        self.shots = 0
 
 
     ###########
     # Task 3b #
     ###########
-    # definition of shots_left here
+    def shots_left(self):
+        return self.shots
 
 
     ###########
     # Task 3c #
     ###########
-    # definition of load here
+    def load(self, ammo):
+        weapon_type = ammo.weapon_type()
+        ammo_qty = ammo.get_quantity()
+        if weapon_type == self.get_name():
+            self.shots += ammo_qty
+            ammo.remove_all()
 
 
     ###########
     # Task 3d #
     ###########
-    # definition of damage here
+    def damage(self):
+        if self.shots_left() == 0:
+            return 0
+        else:
+            self.shots -= 1
+            return super().damage()
 
-    pass # remove this
 
 
 
@@ -166,19 +185,31 @@ def test_task3():
     print(crossbow.shots_left())    # 9
 
 # uncomment to test task3
-#test_task3()
+# test_task3()
 
 
 ###########
 # Task 4a #
 ###########
-# definition of Food class here
+class Food(Thing):
+    def __init__(self, name, food_value):
+        super().__init__(name)
+        self.food_value = food_value
+    
+    def get_food_value(self):
+        return self.food_value
 
 
 ###########
 # Task 4b #
 ###########
-# definition of Medicine class here
+class Medicine(Food):
+    def __init__(self, name, food_value, medicine_value):
+        super().__init__(name, food_value)
+        self.medicine_value = medicine_value
+    
+    def get_medicine_value(self):
+        return self.medicine_value
 
 
 def test_task4():
@@ -196,7 +227,24 @@ def test_task4():
 ##############
 # Task 5a&b  #
 ##############
-# definition of Animal class here
+class Animal(LivingThing):
+    def __init__(self, name, health, food_value, threshold=None):
+        if threshold == None:
+            threshold = random.randint(0, 4)
+        super().__init__(name, health, threshold)
+        self.food_value = food_value
+
+    def get_food_value(self):
+        return self.food_value
+
+    def go_to_heaven(self):
+        place = self.get_place()
+        food_name = self.name + " meat"
+        food = Food(food_name, self.food_value)
+        place.add_object(food)
+        return super().go_to_heaven()
+    
+
 
 def test_task5():
     print('=== Task 5a ===')
