@@ -12,29 +12,60 @@ import simulation
 import random
 
 # Rename XX_AI to YourName_AI
-class XX_AI(Tribute):
+class CLARENCE_AI(Tribute):
     def next_action(self):
         # Next action should return a tuple of what your next action should
         # be. For the full list of tuple that your AI can return, refer to
         # the pdf file
+        
+        if self.get_weapons():
+            # if tribute has weapon, look for living things around him to kill
+            for obj in self.objects_around():
+                if isinstance(obj, LivingThing):
+                    # if living thing is found, find weapon to use to kill it
+                    for weapon in self.get_weapons():
+                        if isinstance(weapon, RangedWeapon):
+                            # if ranged weapon has 1 or more shots, it can be used
+                            if weapon.shots_left() > 0:
+                                return ("ATTACK", obj, weapon)
+                        else:
+                            return ("ATTACK", obj, weapon)
+        
+        objects = self.objects_around()
+        for obj in objects:
+            # look for Thing objects around tribute and add to actions
+            if isinstance(obj, Thing):
+                return ("TAKE", obj)
+        
+        inventory = self.get_inventory()
+        for obj in inventory:
+            if isinstance(obj, Ammo):
+                # if obj is an Ammo object, find corresponding RangedWeapon object
+                for obj2 in inventory:
+                    if obj.weapon_type() == obj2.get_name():
+                        # add Load RangedWeapon object with Ammo object 
+                        return ("LOAD", obj2, obj)
+            elif isinstance(obj, Food):
+                # add eat Food object to action
+                return ("EAT", obj)
+            elif isinstance(obj, Medicine):
+                # add eat Medicine object to action
+                return ("EAT", obj)
 
-        # As an example: the following code will make your AI just walk around
-        # randomly every turn. You do NOT have to use this code if you don't
-        # want to!
+        
         exits = self.get_exits()
         if exits:
-            index = random.randint(0, len(exits)-1)
-            direction = exits[index]
-            return ("GO", direction)
-
-        # Otherwise, do nothing
+            rand_idx = random.randrange(0, len(exits))
+            return ("GO", exits[rand_idx])
+        
+        # If no possible actions, do nothing
         return None
 
 
 # NOTE: DO NOT remove the 2 lines of code below.
 #
-# In particular, you will need to modify the `your_AI = XX_AI` line so that
-# `XX_AI` is the name of your AI class.
+# In particular, you will need to modify the `your_AI = CLARENCE_AI` line so that
+# `CLARENCE_AI` is the name of your AI class.
 # For instance, if your AI class is called `MyPrecious_AI`, then you have to
 # modify that line to:
 #
@@ -49,8 +80,7 @@ class XX_AI(Tribute):
 #
 # You have been warned!
 time_limit = 50 # Modify if your AI needs more than 50 moves for task 2
-your_AI = XX_AI # Modify if you changed the name of the AI class
-
+your_AI = CLARENCE_AI # Modify if you changed the name of the AI class
 
 
 ##################
