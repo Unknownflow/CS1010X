@@ -22,7 +22,13 @@ public class BusEvent implements Comparable<BusEvent> {
     @Override
     public int compareTo(BusEvent o) {
         // TODO: Implement this (Task 1a)
-        return 0;
+        if (this.time == o.time) {
+            return 0;
+        } else if (this.time < o.time) {
+            return -1;
+        } else {
+            return 1;
+        }
     }
 
     @Override

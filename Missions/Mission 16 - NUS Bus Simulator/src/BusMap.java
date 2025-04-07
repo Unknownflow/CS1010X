@@ -3,6 +3,20 @@
  */
 public class BusMap {
 
+    public static void main(String[] args) {
+        Pair res = getNextStopAndTimeTaken("A1", "PGP (START)");
+        System.out.println(res.stopName);
+        System.out.println(res.timeTakenFromPreviousStop);
+        Pair res2 = getNextStopAndTimeTaken("B1", "OPP YIH");
+        System.out.println(res2.stopName);
+        System.out.println(res2.timeTakenFromPreviousStop);
+        Pair res4 = getNextStopAndTimeTaken("C", null);
+        System.out.println(res4.stopName);
+        System.out.println(res4.timeTakenFromPreviousStop);
+        Pair res3 = getNextStopAndTimeTaken("D1", "BIZ 2");
+        System.out.println(res3);
+    }
+
     /**
      * Returns a `Pair` containing the name of the next bus stop for this bus, as well as the time needed to reach that
      * next bus stop from the current stop.
@@ -15,7 +29,39 @@ public class BusMap {
      */
     public static Pair getNextStopAndTimeTaken(String busName, String currentStop) {
         // TODO: Implement this (Task 1b)
-        return new Pair("Placeholder", 0);
+        String[] stops = {};
+        int[] timings = {};
+        switch (busName) {
+            case "A1":
+                stops = A1_STOPS;
+                timings = A1_TIMINGS;
+                break;
+            case "B1":
+                stops = B1_STOPS;
+                timings = B1_TIMINGS;
+                break;
+            case "C":
+                stops = C_STOPS;
+                timings = C_TIMINGS;
+                break;
+            case "D1":
+                stops = D1_STOPS;
+                timings = D1_TIMINGS;
+                break;
+        }
+        String lastStop = stops[stops.length-1];
+        if (currentStop == null) {
+            return new Pair(stops[0], timings[0]);
+        } else if (currentStop == lastStop) {
+            return null;
+        } else {
+            for (int i = 0; i < stops.length; i++) {
+                if (stops[i] == currentStop) {
+                    return new Pair(stops[i+1], timings[i+1]);
+                }
+            }
+        }
+        return null;
     }
 
     /**
