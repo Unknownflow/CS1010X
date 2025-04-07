@@ -538,9 +538,13 @@ def test_task4():
 
     Home = Place("home")
     cat = Animal("cat", 20, 10)
+    knife = Weapon("knife", 10, 10)
     Home.add_object(cat)
     cc.attack(cat, sword)
     print(cat.get_health())
+    cc.attack(cat, knife)
+    print(cat.get_health())
+
 
 # Uncomment to test task 4
 test_task4()
