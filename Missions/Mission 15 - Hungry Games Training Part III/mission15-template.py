@@ -13,9 +13,17 @@ import random
 
 # Rename CLARENCE_AI to YourName_AI
 class CLARENCE_AI(Tribute):
+
     def __init__(self, name, health):
         super().__init__(name, health)
         self.prev_direction = None
+        self.global_directions = ['NORTH', 'EAST', 'UP','SOUTH', 'WEST', 'DOWN']
+
+    # Helper functions
+    def opposite_direction(self, direction):
+        index = ['NORTH', 'EAST', 'UP','SOUTH', 'WEST', 'DOWN'].index(direction)
+        index = (index+3) % 6
+        return self.global_directions[index]
 
     def next_action(self):
         # Next action should return a tuple of what your next action should
@@ -43,8 +51,10 @@ class CLARENCE_AI(Tribute):
             elif isinstance(obj, Food):
                 foods.append(obj)
         
-        sorted(foods, key = lambda x: x.food_value, reverse=True)
-        sorted(medicines, key = lambda x: x.medicine_value, reverse=True)
+        # sort foods by food value in desc order
+        # sort medicine by medicine value in desc order
+        foods = sorted(foods, key = lambda x: x.food_value, reverse=True)
+        medicines = sorted(medicines, key = lambda x: x.medicine_value, reverse=True)
 
         
         rangedWeapons = []
@@ -55,8 +65,8 @@ class CLARENCE_AI(Tribute):
             elif isinstance(obj, Weapon):
                  weapons.append(obj)
         # sort weapons by average damage by desc order, first will be the weapon with higehst avg dmg
-        sorted(rangedWeapons, key = lambda x: (x.min_damage() + x.max_damage()) / 2, reverse=True)
-        sorted(weapons, key = lambda x: (x.min_damage() + x.max_damage()) / 2, reverse=True)
+        rangedWeapons = sorted(rangedWeapons, key = lambda x: (x.min_damage() + x.max_damage()) / 2, reverse=True)
+        weapons = sorted(weapons, key = lambda x: (x.min_damage() + x.max_damage()) / 2, reverse=True)
 
 
         # if there is living things, use weapon to attack a random living thing
@@ -102,13 +112,11 @@ class CLARENCE_AI(Tribute):
             while not found:
                 rand_idx = random.randrange(0, len(exits))
                 direction = exits[rand_idx] 
-                print(direction, self.prev_direction)
-                if direction != opposite_direction(self.prev_direction):
+                if direction != self.opposite_direction(self.prev_direction):
                     found = True
                     self.prev_direction = direction
                     return ("GO", exits[rand_idx])
 
-        
         # If no possible actions, do nothing
         return None
 
@@ -161,7 +169,7 @@ your_AI = CLARENCE_AI # Modify if you changed the name of the AI class
 # Replace gui=True with gui=False if you do not wish to see the GUI
 
 time_limit = 20    # You may change the time limit if your AI is taking too long
-# simulation.task2(CLARENCE_AI("XX AI", 100), time_limit, gui=True)
+simulation.task2(CLARENCE_AI("XX AI", 100), time_limit, gui=True)
 
 
 
@@ -203,4 +211,4 @@ def config():
 
 # Replace CLARENCE_AI with the class name of your AI
 # Replace gui=True with gui=False if you do not wish to see the GUI
-simulation.optional_task(CLARENCE_AI("XX AI", 100), config, gui=True)
+# simulation.optional_task(CLARENCE_AI("XX AI", 100), config, gui=True)
