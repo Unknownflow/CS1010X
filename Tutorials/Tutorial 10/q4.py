@@ -21,7 +21,9 @@ def collatz_distance_memo(n):
             return 1 + collatz_distance_memo(n/2)
         else:
             return 1 + collatz_distance_memo(3 * n + 1)
-    return memoize(helper, "collatz_distance")(n)
+        
+    memoize_table[n] = helper(n)
+    return memoize_table[n]
 
 def max_collatz_distance_memo(n):
     max_dist = 0
@@ -32,6 +34,7 @@ def max_collatz_distance_memo(n):
             max_dist = dist
     
     return max_dist
+        
 
 
 print(max_collatz_distance_memo(6))
