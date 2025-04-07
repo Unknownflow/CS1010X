@@ -11,52 +11,103 @@ from engine import *
 import simulation
 import random
 
-# Rename XX_AI to YourName_AI
+# Rename CLARENCE_AI to YourName_AI
 class CLARENCE_AI(Tribute):
+    def __init__(self, name, health):
+        super().__init__(name, health)
+        self.prev_direction = None
+
     def next_action(self):
         # Next action should return a tuple of what your next action should
         # be. For the full list of tuple that your AI can return, refer to
         # the pdf file
         
-        if self.get_weapons():
-            # if tribute has weapon, look for living things around him to kill
-            for obj in self.objects_around():
-                if isinstance(obj, LivingThing):
-                    # if living thing is found, find weapon to use to kill it
-                    for weapon in self.get_weapons():
-                        if isinstance(weapon, RangedWeapon):
-                            # if ranged weapon has 1 or more shots, it can be used
-                            if weapon.shots_left() > 0:
-                                return ("ATTACK", obj, weapon)
-                        else:
-                            return ("ATTACK", obj, weapon)
-        
-        objects = self.objects_around()
-        for obj in objects:
-            # look for Thing objects around tribute and add to actions
-            if isinstance(obj, Thing):
-                return ("TAKE", obj)
-        
-        inventory = self.get_inventory()
-        for obj in inventory:
+        # store living things and things into an array
+        livingThings = []
+        things = []
+        for obj in self.objects_around():
+            if isinstance(obj, LivingThing):
+                livingThings.append(obj)
+            elif isinstance(obj, Thing):
+                things.append(obj)
+
+        # store ammo, food and medicine into an array
+        ammos = []
+        foods = []
+        medicines = []
+        for obj in self.get_inventory():
             if isinstance(obj, Ammo):
-                # if obj is an Ammo object, find corresponding RangedWeapon object
-                for obj2 in inventory:
-                    if obj.weapon_type() == obj2.get_name():
-                        # add Load RangedWeapon object with Ammo object 
-                        return ("LOAD", obj2, obj)
-            elif isinstance(obj, Food):
-                # add eat Food object to action
-                return ("EAT", obj)
+                ammos.append(obj)
             elif isinstance(obj, Medicine):
-                # add eat Medicine object to action
-                return ("EAT", obj)
+                medicines.append(obj)
+            elif isinstance(obj, Food):
+                foods.append(obj)
+        
+        sorted(foods, key = lambda x: x.food_value, reverse=True)
+        sorted(medicines, key = lambda x: x.medicine_value, reverse=True)
 
         
+        rangedWeapons = []
+        weapons = []
+        for obj in self.get_weapons():
+            if isinstance(obj, RangedWeapon):
+                 rangedWeapons.append(obj)
+            elif isinstance(obj, Weapon):
+                 weapons.append(obj)
+        # sort weapons by average damage by desc order, first will be the weapon with higehst avg dmg
+        sorted(rangedWeapons, key = lambda x: (x.min_damage() + x.max_damage()) / 2, reverse=True)
+        sorted(weapons, key = lambda x: (x.min_damage() + x.max_damage()) / 2, reverse=True)
+
+
+        # if there is living things, use weapon to attack a random living thing
+        if livingThings:
+            rand_idx = random.randrange(0, len(livingThings))
+            if rangedWeapons:
+                for rangedWeapon in rangedWeapons:
+                    # only attack with ranged weapon if there are 1 or more shots
+                    if rangedWeapon.shots_left() != 0:
+                        # attack with ranged weapon with highest avg dmg
+                        return ("ATTACK", livingThings[rand_idx], rangedWeapon)                        
+            if weapons:
+                # attack with weapon with highest avg dmg
+                return ("ATTACK", livingThings[rand_idx], weapons[0])
+        
+        if things:
+            # take a random thing if there is one nearby
+            rand_idx = random.randrange(0, len(things))
+            return ("TAKE", things[rand_idx])
+        
+        for ammo in ammos:
+            for rangedWeapon in rangedWeapons:
+                # find correct ammo to load the ammo into the ranged weapon 
+                if ammo.weapon_type() == rangedWeapon.get_name():
+                    return ("LOAD", rangedWeapon, ammo)
+
+        if foods:
+            return ("EAT", foods[0])
+      
+        if medicines:
+            return ("EAT", medicines[0])
+
         exits = self.get_exits()
         if exits:
-            rand_idx = random.randrange(0, len(exits))
-            return ("GO", exits[rand_idx])
+            # if it has not moved off from starting pos
+            if self.prev_direction == None:
+                rand_idx = random.randrange(0, len(exits))
+                self.prev_direction = exits[rand_idx]
+                return ("GO", exits[rand_idx])
+
+            found = False
+            # loop until direction which is not opposite is found
+            while not found:
+                rand_idx = random.randrange(0, len(exits))
+                direction = exits[rand_idx] 
+                print(direction, self.prev_direction)
+                if direction != opposite_direction(self.prev_direction):
+                    found = True
+                    self.prev_direction = direction
+                    return ("GO", exits[rand_idx])
+
         
         # If no possible actions, do nothing
         return None
@@ -94,9 +145,9 @@ your_AI = CLARENCE_AI # Modify if you changed the name of the AI class
 # 2. Your AI should be able to kill chicken
 # 3. Your AI should be able to pick up chicken_meat after killing chicken
 
-# Replace XX_AI with the class name of your AI
+# Replace CLARENCE_AI with the class name of your AI
 # Replace gui=True with gui=False if you do not wish to see the GUI
-#simulation.task1(XX_AI("XX AI", 100), gui=True)
+# simulation.task1(CLARENCE_AI("CLARENCE AI", 100), gui=True)
 
 
 ##########
@@ -106,11 +157,11 @@ your_AI = CLARENCE_AI # Modify if you changed the name of the AI class
 ## 2. Your AI should be able to move around and explore
 ## 3. Your AI should be able to find harmless Tribute and kill him
 
-# Replace XX_AI with the class name of your AI
+# Replace CLARENCE_AI with the class name of your AI
 # Replace gui=True with gui=False if you do not wish to see the GUI
 
 time_limit = 20    # You may change the time limit if your AI is taking too long
-#simulation.task2(XX_AI("XX AI", 100), time_limit, gui=True)
+# simulation.task2(CLARENCE_AI("XX AI", 100), time_limit, gui=True)
 
 
 
@@ -145,11 +196,11 @@ def config():
     game.add_tribute(soedar)
 
     # Yes, your AI can fight with himself
-    #ai_clone = XX_AI("AI Clone", 100)
+    #ai_clone = CLARENCE_AI("AI Clone", 100)
     #game.add_tribute(ai_clone)
 
     return game
 
-# Replace XX_AI with the class name of your AI
+# Replace CLARENCE_AI with the class name of your AI
 # Replace gui=True with gui=False if you do not wish to see the GUI
-#simulation.optional_task(XX_AI("XX AI", 100), config, gui=True)
+simulation.optional_task(CLARENCE_AI("XX AI", 100), config, gui=True)
