@@ -111,8 +111,6 @@ class Ammo(Thing):
     def remove_all(self):
         self.quantity = 0
 
-    pass # remove this
-
 def test_task2():
     print('=== Task 2 ===')
     bow = Weapon('bow', 10, 20)
