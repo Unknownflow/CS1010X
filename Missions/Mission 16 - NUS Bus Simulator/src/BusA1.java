@@ -5,6 +5,11 @@ import java.util.Random;
  */
 public class BusA1 extends AbstractBus {
 
+    public static void main(String[] args) {
+        BusA1 busA1 = new BusA1();
+        System.out.println(busA1.moveToNextStop());
+    }
+
     public BusA1() {
         BusMap.Pair pair = BusMap.getNextStopAndTimeTaken("A1", null);
         assert pair != null;
@@ -20,7 +25,13 @@ public class BusA1 extends AbstractBus {
     @Override
     public int moveToNextStop() {
         // TODO: Implement this (Task 2a)
-        return -1;
+        BusMap.Pair currentStopPair = BusMap.getNextStopAndTimeTaken("A1", currentStopName);
+        if (currentStopPair != null) {
+            currentStopName = currentStopPair.stopName;
+            return currentStopPair.timeTakenFromPreviousStop;
+        } else {
+            return -1;
+        }
     }
 
     // Bus A1 should breakdown with a probability of 0.1

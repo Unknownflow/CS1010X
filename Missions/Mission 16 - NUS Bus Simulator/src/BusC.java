@@ -20,7 +20,13 @@ public class BusC extends AbstractBus {
     @Override
     public int moveToNextStop() {
         // TODO: Implement this (Task 2a)
-        return -1;
+        BusMap.Pair currentStopPair = BusMap.getNextStopAndTimeTaken("C", currentStopName);
+        if (currentStopPair != null) {
+            currentStopName = currentStopPair.stopName;
+            return currentStopPair.timeTakenFromPreviousStop;
+        } else {
+            return -1;
+        }
     }
 
     // Bus C should breakdown with a probability of 0.05
