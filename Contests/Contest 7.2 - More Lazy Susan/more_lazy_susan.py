@@ -4,7 +4,10 @@ import secrets
 MAX_MOVES = 4000
 
 # The various numbers of coins used for the contest.
-CONTEST_LEVELS = (10, 13, 15)
+# CONTEST_LEVELS = (10, 13, 15)
+# CONTEST_LEVELS = (10, )
+# CONTEST_LEVELS = (13, )
+CONTEST_LEVELS = (15, )
 
 # Score modifiers used for each level.
 SCORE_MODIFIERS = (1, 4, 7)
@@ -54,6 +57,7 @@ class Table(object):
 def run_solver(coins, solver):
     table = Table(coins)
     while table.turn < MAX_MOVES:
+        # print(table.turn, solver(table.turn), len(solver(table.turn)) == 10)
         table.flip(solver(table.turn))
         if (table.is_solved()):
             return table.turn
@@ -66,6 +70,7 @@ def run_solver(coins, solver):
 def get_contest_score(create_solver, verbose=False):
     total_moves = 0
     total_score = 0
+    total_valid = 0
     for i in range(len(CONTEST_LEVELS)):
         size = CONTEST_LEVELS[i]
         if verbose:
@@ -78,9 +83,12 @@ def get_contest_score(create_solver, verbose=False):
             if verbose:
                 print(f'  Round {r+1}: {moves} moves, {score} score')
             total_moves += moves if moves >= 0 else MAX_MOVES
+            if score != 0:
+                total_valid += 1
             total_score += score
 
     if verbose:
         print(f'=== Total moves: {total_moves} ===')
         print(f'=== Total score: {total_score} ===')
+        print(f'=== Total score: {total_valid} ===')
     return total_score
