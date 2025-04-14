@@ -1,3 +1,5 @@
+import jdk.jfr.Event;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -38,6 +40,18 @@ public class BusSimulator {
      */
     public void run() {
         // TODO: Implement this (Task 3b)
+
+        while (!eventQueue.isEmpty()) {
+            BusEvent busEvent = eventQueue.poll();
+            System.out.println(busEvent.toString());
+            AbstractBus bus = busEvent.bus;
+            int timeToNextStop = bus.moveToNextStop();
+            if (timeToNextStop != -1) {
+                int time = busEvent.time + timeToNextStop;
+                BusEvent newBusEvent = new BusEvent(bus, time, EventType.OPERATIONAL);
+                eventQueue.offer(newBusEvent);
+            }
+        }
     }
 
     /**
@@ -47,6 +61,43 @@ public class BusSimulator {
      */
     public void runWithBreakdowns() {
         // TODO: Implement this (Task 4b)
+        while (!eventQueue.isEmpty()) {
+            BusEvent busEvent = eventQueue.poll();
+            System.out.println(busEvent.toString());
+            AbstractBus bus = busEvent.bus;
+            int time = busEvent.time;
+            EventType eventType = busEvent.eventType;
+            switch (eventType) {
+                case OPERATIONAL:
+                    // add breakdown event if train broke down
+                    if (bus.didBreakdown(random)) {
+                        BusEvent breakdownEvent = new BusEvent(bus, time+1, EventType.BROKEN_DOWN);
+                        eventQueue.offer(breakdownEvent);
+                    } else {
+                        // add event to reach next stop unless its at the last stop
+                        int timeToNextStop = bus.moveToNextStop();
+                        if (timeToNextStop != -1) {
+                            BusEvent nextBusEvent = new BusEvent(bus, time+timeToNextStop, EventType.OPERATIONAL);
+                            eventQueue.offer(nextBusEvent);
+                        }
+                    }
+                    break;
+                case BROKEN_DOWN:
+                    // add repair event after train broke down
+                    BusEvent repairEvent = new BusEvent(bus, time+10, EventType.REPAIRED);
+                    eventQueue.offer(repairEvent);
+                    break;
+                case REPAIRED:
+                    // add event to reach next stop unless its at the last stop
+                    int timeToNextStop = bus.moveToNextStop();
+                    if (timeToNextStop != -1) {
+                        BusEvent nextBusEvent = new BusEvent(bus, time+timeToNextStop, EventType.OPERATIONAL);
+                        eventQueue.offer(nextBusEvent);
+                    }
+                    break;
+            }
+
+        }
     }
 
     /**
@@ -56,7 +107,8 @@ public class BusSimulator {
         List<BusEvent> busEvents = readBusEvents();
         BusSimulator simulator = new BusSimulator(busEvents);
         simulator.printStatus();
-        simulator.run();
+//        simulator.run();
+        simulator.runWithBreakdowns();
     }
 
     /**
@@ -92,7 +144,7 @@ public class BusSimulator {
                 continue;
             }
 
-            BusEvent busEvent = new BusEvent(bus, Integer.parseInt(busLine[1]));
+            BusEvent busEvent = new BusEvent(bus, Integer.parseInt(busLine[1]), EventType.OPERATIONAL);
             busEvents.add(busEvent);
         }
 

@@ -38,13 +38,13 @@ public class BusA1 extends AbstractBus {
     @Override
     public boolean didBreakdown(Random random) {
         // TODO: Implement this (Task 4a)
-        return false;
+        return random.nextDouble() < 0.1;
     }
 
     @Override
     public String toString() {
         // You may choose to implement this for Task 3b
-        return null;
+        return "Bus A1";
     }
 
 }

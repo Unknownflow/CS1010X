@@ -11,10 +11,10 @@ public class BusEvent implements Comparable<BusEvent> {
      * Constructs a `BusEvent` with a given bus and time. This constructor (i.e. one that takes in a time and bus) MUST
      * EXIST, though the constructor body can be modified if other instance variables are added subsequently.
      */
-    public BusEvent(AbstractBus bus, int time) {
+    public BusEvent(AbstractBus bus, int time, EventType eventType) {
         this.bus = bus;
         this.time = time;
-        this.eventType = EventType.OPERATIONAL;
+        this.eventType = eventType;
     }
 
     // Method that compares one `BusEvent` with another to determine the ordering. The BusEvent with an earlier
@@ -34,7 +34,18 @@ public class BusEvent implements Comparable<BusEvent> {
     @Override
     public String toString() {
         // You may choose to implement this for Task 3b / Task 4b
-        return null;
+        String currentStopName = bus.currentStopName;
+        String currentTime = Integer.toString(this.time);
+        switch (this.eventType) {
+            case BROKEN_DOWN:
+                return currentTime + ": " + bus + " has broken down at " + currentStopName + ".";
+            case REPAIRED:
+                return currentTime + ": " + bus + " has been repaired at " + currentStopName + ".";
+            case OPERATIONAL:
+                return currentTime + ": " + bus + " arrives at " + currentStopName + ".";
+
+        }
+        return "";
     }
 
 }
