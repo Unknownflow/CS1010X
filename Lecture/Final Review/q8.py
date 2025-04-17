@@ -27,24 +27,32 @@ def accumulate(fn, initial, seq):
     
 def part_i():
     '''code for [1, 2, 3, 4, 5, 6, 7, 8]'''
-    return
+    return enumerate_interval(1,8)
 
 
 def part_ii():
     '''code for [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60]'''
-    return
+    return map(lambda x: x*5, enumerate_interval(1,12))
 
 def part_iii():
     '''code for [1, 9, 25, 49, 81, 121]'''
-    return
+    return map(lambda x: x ** 2, filter(lambda x: x % 2 == 1, enumerate_interval(1,11)))
 
 def part_iv():
     '''code for [1, 1, 9, 2, 25, 3, 49, 4, 81, 5]'''
-    return
+    nums = enumerate_interval(1,5)
+    return accumulate(lambda x, y: x+y, [], map(lambda i: [map(lambda x: x * x, [2*i - 1])[0], i], nums))
 
 def part_v():
     '''code for [20, 16, 14, 10, 8, 4, 2]'''
-    return
+    return accumulate(lambda x, y: y+[x], [],
+        map(lambda x: x*2, filter(lambda x: x%3 != 0, enumerate_interval(1,10))))
+
 
 
                 
+print(part_i())
+print(part_ii())
+print(part_iii())
+print(part_iv())
+print(part_v())
