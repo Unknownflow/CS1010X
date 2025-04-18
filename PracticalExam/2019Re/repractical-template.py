@@ -3,7 +3,23 @@
 #################
 
 def shuffle(a, times):
-    pass
+    if times == 0:
+        return a
+    else:
+        shuffled = []
+        length = len(a)
+        mid = length // 2
+        if length % 2 == 0:
+            for i in range(mid):
+                shuffled.append(a[i])
+                shuffled.append(a[i+mid])
+        else:
+            for i in range(mid):
+                shuffled.append(a[i])
+                shuffled.append(a[i+mid+1])
+            shuffled.append(a[mid])                
+        a = shuffled
+        return shuffle(a, times-1)
 
 def test1a():
     print('=== Q1a ===')
@@ -13,7 +29,7 @@ def test1a():
     print(shuffle([1, 2, 3, 4, 5, 6, 7], 1)==[1, 5, 2, 6, 3, 7, 4])
     print(shuffle([1, 2, 3, 4, 5, 6, 7], 2)==[1, 3, 5, 7, 2, 4, 6])
  
-#test1a()
+# test1a()
 
 
 ##########################
@@ -21,7 +37,14 @@ def test1a():
 ##########################
 
 def back_to_original(a):
-    pass
+    count = 0
+    orig = a
+    while True:
+        a = shuffle(a, 1)
+        count += 1
+        if a == orig:
+            return count
+        
 
 def test1b():
     print('=== Q1b ===')    
@@ -29,7 +52,7 @@ def test1b():
     print(back_to_original([1, 2, 3, 4, 5])==4)
     print(back_to_original([1, 1, 1, 1])==1)
  
-#test1b()
+# test1b()
 
 ##############
 # Question 2 #
@@ -56,7 +79,16 @@ def read_csv(csvfilename):
 ###############
 
 def get_dates_for_hashtag(filename, hashtag):
-    pass    
+    rows = read_csv(filename)
+    dates = []
+    for row in rows:
+        date, time, tweet, hashtags, likes, retweets = row
+        hashtags_list = hashtags.split(";")
+        if hashtag in hashtags_list:
+            if date not in dates:
+                dates.append(date)
+    
+    return dates
 
 def test2a():
     print("===2a===")
@@ -68,14 +100,26 @@ def test2a():
     print(tweets == ['16-08-09', '16-11-08'])
     print(get_dates_for_hashtag("donald-tweets.csv", "China")==[]) 
 
-#test2a()
+# test2a()
 
 ###############
 # Question 2b #
 ###############
 
 def active_hour(filename,start_date,end_date):
-    pass
+    rows = read_csv(filename)
+    hours_count = {}
+    for row in rows[1:]:
+        date, time, tweet, hashtags, likes, retweets = row
+        if start_date <= date <= end_date:
+            d = datetime.strptime(date + " " + time, "%y-%m-%d %X")
+            if d not in hours_count:
+                hours_count[d] = 1
+            else:
+                hours_count[d] += 1
+    
+    
+    # return dates
     
 def test2b():
     print("===2b===")
@@ -83,7 +127,7 @@ def test2b():
     print(active_hour("donald-tweets.csv", "16-08-23", "16-11-06")==[1])
     print(active_hour("donald-tweets.csv", "16-11-06", "16-11-06")==[0, 23])
 
-#test2b()
+test2b()
 
 ###############
 # Question 2c #
