@@ -113,13 +113,22 @@ def active_hour(filename,start_date,end_date):
         date, time, tweet, hashtags, likes, retweets = row
         if start_date <= date <= end_date:
             d = datetime.strptime(date + " " + time, "%y-%m-%d %X")
-            if d not in hours_count:
-                hours_count[d] = 1
+            hour = d.hour
+            if hour not in hours_count:
+                hours_count[hour] = 1
             else:
-                hours_count[d] += 1
+                hours_count[hour] += 1
     
-    
-    # return dates
+    max_count = 0
+    max_hour = []
+    for hour, count in hours_count.items():
+        if count == max_count:
+            max_hour.append(hour)
+        elif count > max_count:
+            max_hour = [hour]
+            max_count = count
+        
+    return sorted(max_hour)
     
 def test2b():
     print("===2b===")
@@ -127,14 +136,27 @@ def test2b():
     print(active_hour("donald-tweets.csv", "16-08-23", "16-11-06")==[1])
     print(active_hour("donald-tweets.csv", "16-11-06", "16-11-06")==[0, 23])
 
-test2b()
+# test2b()
 
 ###############
 # Question 2c #
 ###############
 
 def top_k(filename,k,start_date,end_date):
-    pass
+    rows = read_csv(filename)
+    tweets = []
+    for row in rows[1:]:
+        date, time, tweet, hashtags, likes, retweets = row
+        if start_date <= date <= end_date:
+            tweets.append({"tweet": tweet, "likes": likes})
+    sorted_tweets = sorted(tweets, key=lambda x: x["likes"], reverse=True)
+    print(sorted_tweets[:5])
+    top_tweets = []
+    for i in range(min(k, len(sorted_tweets))):
+        top_tweets.append(sorted_tweets[i]["tweet"])
+    
+    print(top_tweets)
+    return top_tweets
     
 def test2c():
     print("===2c===")
@@ -144,7 +166,7 @@ def test2c():
     print(top_k("donald-tweets.csv", 3, "15-10-13", "16-10-11")==tweets)
     print(top_k("donald-tweets.csv", 1, "16-11-18", "16-11-20")==[])
 
-#test2c()
+test2c()
 
 
 ##############
