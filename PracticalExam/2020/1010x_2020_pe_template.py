@@ -3,7 +3,13 @@
 ##########################################
 
 def ET_number(num, mapping):
-    pass
+    res = ""
+    base = len(mapping)
+    while num > 0:
+        remainder = num % base
+        res = mapping[remainder] + res
+        num = num // base
+    return res
 
 def test1a():
     print("=====Test 1a=====")
@@ -17,14 +23,26 @@ def test1a():
     print(ET_number(5, ('1', '0')) == '010')
     print(ET_number(10, ('a', 'b', 'c')) == 'bab')
 
-#test1a()
+# test1a()
 
 #################################################
 # Question 1b: Largest alien number [ 5 Marks ] #
 #################################################
 
 def max_ET_number(ET_numbers, mapping):
-    pass       
+    max_num = ""
+    max_res = 0
+    base = len(mapping)
+    for ET_num in ET_numbers:
+        res = 0
+        power = len(ET_num)
+        for num in ET_num:
+            res += (mapping.index(num)) * (base ** power)
+            power -= 1
+        if res >= max_res:
+            max_res = res
+            max_num = ET_num
+    return max_num
 
 def test1b():
     print("=====Test 1b=====")
@@ -40,7 +58,7 @@ def test1b():
     print(max_ET_number(('317','311','713','413'),('7','1','3','4'))=='413')
     print(max_ET_number(('aba', 'abc', 'ca', 'cb'), ('a', 'b', 'c')) == 'cb')
 
-#test1b()
+# test1b()
 
 ############################
 # Question 2: Tesla stocks #
@@ -66,7 +84,16 @@ def read_csv(csvfilename):
 # Question 2a: Retrieving tweets by date [ 3 Marks ] #
 ######################################################
 def get_tweet_by_date(date):
-    pass
+    rows = read_csv("tweets.csv")
+    date = datetime.datetime.strptime(date, "%m/%d/%Y")
+    tweets = ()
+    for handle, name, content, replies, retweets, favorite, d in rows[1:]:
+        d = datetime.datetime.strptime(d, "%m/%d/%Y")
+        if d == date:
+            tweets += (content, )
+    
+    return tweets
+        
 
 def test2a():
     print("=====Test 2a=====")
@@ -75,13 +102,31 @@ def test2a():
     print(get_tweet_by_date('12/12/2001') == ())
     print(get_tweet_by_date('5/21/2021') == ()) 
 
-#test2a()
+# test2a()
 
 #############################################################
 # Question 2b: Effect of tweets on stock prices [ 3 Marks ] #
 #############################################################
 def tweet_effect(date):
-    pass
+    tweets = get_tweet_by_date(date)
+
+    if len(tweets) == 0:
+        return None
+    rows = read_csv("TSLA.csv")
+    date = datetime.datetime.strptime(date, "%m/%d/%Y")
+    new_date = date + datetime.timedelta(days=5)
+    stock_prices = []
+
+    for date_data, stockprice in rows[1:]:
+        d = datetime.datetime.strptime(date_data, "%m/%d/%Y")
+        if date <= d <= new_date:
+            stock_prices.append(float(stockprice))
+
+    tweets += (stock_prices,)
+    return tweets 
+            
+        
+
 
 def test2b():
     print("=====Test 2b=====")
@@ -89,21 +134,45 @@ def test2b():
     print(tweet_effect('3/23/2017') == None)
     print(tweet_effect('7/14/2019') == ('To Infinity and Beyond! https://t.co/dgysTBqWfV', [253.5, 252.380005, 254.860001, 253.539993, 258.179993]))
 
-#test2b()
+# test2b()
 
 ##########################################
 # Question 2c: Money tweets [ 4 Marks ]  #
 ##########################################
 
 def money_tweets(start_date, end_date):
-    pass           
+    start = datetime.datetime.strptime(start_date, "%m/%d/%Y")
+    end = datetime.datetime.strptime(end_date, "%m/%d/%Y")
+    max_diff = 0
+    max_tweets = ()
+
+    while start != end:
+        date = datetime.datetime.strftime(start, "%m/%d/%Y")
+        tweet_effects = tweet_effect(date)
+        # print(tweet_effects)
+        if tweet_effects is not None:
+            # print(tweet_effects)
+            stock_prices = tweet_effects[-1]
+            max_price = max(stock_prices)
+            min_price = min(stock_prices)
+            diff = max_price - min_price
+            if diff > max_diff:
+                max_diff = diff
+                max_tweets = tweet_effects[:-1]
+
+        start = start + datetime.timedelta(days=1)
+    
+    if len(max_tweets) == 0:
+        return None
+    else:
+        return (max_tweets, max_diff)
 
 def test2c():
     print("=====Test 2c=====")
     print(money_tweets('5/12/2020', '5/21/2020') == (('Ice cream sundae in a martini glass https://t.co/zAVFlOsYkM', 'Super exciting day coming up! https://t.co/7ZdFsJE9zR', 'https://t.co/lQWpSwtRj7'), 22.669983000000002))
     print(money_tweets('4/29/2020', '5/1/2020') == (('FREE AMERICA NOW', 'Give people their freedom back! https://t.co/iG8OYGaVZ0', 'Bravo Texas! https://t.co/cVkDewRqGv'), 99.19000299999993))
 
-#test2c()
+# test2c()
 
 ############################################
 # Question 3: TOY TRAIN                    #
