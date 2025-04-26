@@ -180,22 +180,166 @@ def test2c():
 
 class carriage:
     def __init__(self, x, y):
-        pass
+        self.x = x
+        self.y = y
+        self.attached = []
+
     def get_x(self):
-        pass
+        return self.x
+    
     def get_y(self):
-        pass
+        return self.y
+    
     def get_pos(self):
-        pass
+        return (self.get_x(), self.get_y())
+    
     def attach(self, car):
-        pass
+        car_x = car.get_x()
+        car_y = car.get_y()
+        if car_x == self.get_x():
+            if abs(car_y - self.get_y()) == 1:
+                self.attached.append(car)
+                return "Attached."
+        elif car_y == self.get_y():
+            if abs(car_x - self.get_x()) == 1:
+                self.attached.append(car)
+                return "Attached."
+        
+        return "Can't attach."
+            
+            
     
 
 class engine (carriage):
     def __init__(self, x, y):
-        pass
+        super().__init__(x, y)
+
     def move (self, track):
-        pass
+        for move in track:
+            pos = []
+            curr = self
+            prev = None
+
+            curr_x = curr.x
+            curr_y = curr.y
+            if move == "u":
+                curr_y += 1
+            elif move == "d":
+                curr_y -= 1
+            elif move == "l":
+                curr_x -= 1
+            elif move == "r":
+                curr_x += 1
+            pos.append((curr_x, curr_y))
+            prev = (curr_x, curr_y)
+            print('app', pos)
+            if curr.attached:
+                curr = curr.attached[0]
+                print('curr',curr.x, curr.y)
+            else:
+                curr = None
+            
+            collisionsFound = False
+            # loop thru to find if there is any collision
+            while curr:
+                curr_x = curr.x
+                curr_y = curr.y
+                if move == "u":
+                    if curr_x == prev[0]:
+                        curr_y += 1
+                    elif curr_x < prev[0]:
+                        curr_x += 1
+                    else:
+                        curr_x -= 1
+                elif move == "d":
+                    print('d',curr_x, curr_y, prev)
+
+                    if curr_x == prev[0]:
+                        curr_y -= 1
+                    elif curr_x < prev[0]:
+                        curr_x += 1
+                    else:
+                        curr_x -= 1
+                elif move == "l":
+                    if curr_y == prev[1]:
+                        curr_x -= 1
+                    elif curr_y < prev[1]:
+                        curr_y += 1
+                    else:
+                        curr_y -= 1
+                elif move == "r":
+                    if curr_y == prev[1]:
+                        curr_x -= 1
+                    elif curr_y < prev[1]:
+                        curr_y += 1
+                    else:
+                        curr_y -= 1
+                
+                if (curr_x, curr_y) in pos:
+                    print('pos',curr_x, curr_y)
+                    collisionsFound = True
+                    break
+                pos.append((curr_x, curr_y))
+                print('pos2',pos)
+                if curr.attached:
+                    curr = curr.attached[0]
+                else:
+                    curr = None
+                
+
+            curr = self
+            prev = None
+            # update if there is no collision
+            while curr and not collisionsFound:
+                if prev:
+                    # collision when prev carriage collide with carriage
+                    if move == "u":
+                        if curr.get_x() == prev.get_x():
+                            curr.y += 1
+                        elif curr.get_x() < prev.get_x():
+                            curr.x += 1
+                        else:
+                            curr.x -= 1
+                    elif move == "d":
+                        if curr.get_x() == prev.get_x():
+                            curr.y -= 1
+                        elif curr.get_x() < prev.get_x():
+                            curr.x += 1
+                        else:
+                            curr.x -= 1
+                    elif move == "l":
+                        if curr.get_y() == prev.get_y():
+                            curr.x -= 1
+                        elif curr.get_y() < prev.get_y():
+                            curr.y += 1
+                        else:
+                            curr.y -= 1
+                    elif move == "r":
+                        if curr.get_y() == prev.get_y():
+                            curr.x += 1
+                        elif curr.get_y() < prev.get_y():
+                            curr.y += 1
+                        else:
+                            curr.y -= 1
+                else:
+                    
+                    if move == "u":
+                        curr.y += 1
+                    elif move == "d":
+                        curr.y -= 1
+                    elif move == "l":
+                        curr.x -= 1
+                    elif move == "r":
+                        curr.x += 1
+
+                prev = curr
+                if curr.attached:
+                    curr = curr.attached[0]
+                else:
+                    curr = None
+
+        # No collision
+        return None
 
 def test3():
     print("=====Test 3=====")
@@ -230,11 +374,15 @@ def test3():
     print((e.get_pos(), c3.get_pos(), c2.get_pos(), c1.get_pos(), c0.get_pos()) == ((3, 6), (2, 6), (2, 5), (2, 4), (2, 3)))
     print(e.move('uuuuuu') == None)
     print((e.get_pos(), c3.get_pos(), c2.get_pos(), c1.get_pos(), c0.get_pos()) == ((3, 12), (3, 11), (3, 10), (3, 9), (3, 8)))
+    print('rdll')
     print(e.move('rdll') == "Collision!")
+    print((e.get_pos(), c3.get_pos(), c2.get_pos(), c1.get_pos(), c0.get_pos()))
     print((e.get_pos(), c3.get_pos(), c2.get_pos(), c1.get_pos(), c0.get_pos()) == ((4, 11), (4, 12), (3, 12), (3, 11), (3, 10)))
+    print('ldrr')
     print(e.move('ldrr') == "Collision!")
+    print((e.get_pos(), c3.get_pos(), c2.get_pos(), c1.get_pos(), c0.get_pos()))
     print((e.get_pos(), c3.get_pos(), c2.get_pos(), c1.get_pos(), c0.get_pos()) == ((4, 11), (4, 12), (3, 12), (3, 11), (3, 10)))
     print(e.move('d') == None)
     print((e.get_pos(), c3.get_pos(), c2.get_pos(), c1.get_pos(), c0.get_pos()) == ((4, 10), (4, 11), (4, 12), (3, 12), (3, 11)))
 
-#test3()
+test3()
