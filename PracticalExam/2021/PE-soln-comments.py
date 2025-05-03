@@ -29,7 +29,7 @@ def day_of_date( dd, mm, yyyy ):
 # Question 2
 #
 #############################################################
-
+from runes import *
 #### A ########
 def stackn_alt(n, pic1, pic2):
     ## Four evaluation test cases, one mark each.
