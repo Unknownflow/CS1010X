@@ -13,30 +13,33 @@ def make_stack():
       return popped
   return helper
 
-def prefix_infix(lst):
+def prefix_infix(expr):
     stack = make_stack()
-    res = ""
+    frame_stack = make_stack()  # simulate call stack: (expr, visited_flag)
 
-    for items in lst:
-      if type(items) == list:
-        count = 0
-        while True: 
-          stack("push", items[0])
-          res += "("
-          count += 1
-          if type(items[1]) != list:
-            break
-          items = items[1]
-        
-        op = stack("pop")
-        res += str(items[1]) + op + str(items[2])
-        for i in range(count):
-          res += ")"
+    frame_stack("push", (expr, False))
 
-      else:          
-        stack("push", items)
-        res += "("
-    return res
+    while frame_stack("size") > 0:
+        node, visited = frame_stack("pop")
+
+        if isinstance(node, list):
+            if visited:
+                # Process operator node after children are on the stack
+                right = stack("pop")
+                left = stack("pop")
+                operator = node[0]
+                stack("push", f"({left} {operator} {right})")
+            else:
+                # Post-order: push current node again as visited, then right, then left
+                frame_stack("push", (node, True))        # revisit this node
+                frame_stack("push", (node[2], False))    # right child
+                frame_stack("push", (node[1], False))    # left child
+        else:
+            # Operand: just push as string
+            stack("push", str(node))
+
+    return stack("pop")
+
 
 print(prefix_infix (['+', ['*', 5, 4], ['-', 2, 1]]))
 
