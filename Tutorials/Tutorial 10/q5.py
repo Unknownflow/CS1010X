@@ -2,6 +2,7 @@ from urllib.request import urlopen
 from urllib.parse import urlsplit
 from urllib.error import *
 
+
 def httpget(url):
     parsed = urlsplit(url)
     if not parsed.scheme:  # protocol insertion
@@ -10,7 +11,10 @@ def httpget(url):
         raise ValueError("Unknown protocol")
     return urlopen(url).read()
 
+
 url = "http://www.nus.edu.sg/"
+print(httpget(url))
+print(httpget("DQWD"))
 
 # Q5
 """
@@ -20,7 +24,7 @@ moved to another address, hence resulting in an error 404. The user may also
 not be authorised to access the website and this result in error 403. 
 """
 
-#Q6
+# Q6
 """
 Fill in your answer here.
 If an empty string is returned, the user will not know what is happening when 
