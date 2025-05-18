@@ -1,11 +1,13 @@
 public class rec11_fib {
     public static void main(String[] args) {
-//        for (int i = 0; i < 10; i++) {
-//            System.out.println(fib(i));
-//        }
-//        System.out.println(fib(46));
+        // for (int i = 0; i < 10; i++) {
+        // System.out.println(fib(i));
+        // }
+        // System.out.println(fib(46));
         // fib(46) prints 1836311903
         System.out.println(fib(47));
+        System.out.println(fib(2, 0));
+
         // fib(47) prints -1323752223
         // fib(47) is 2,971,215,073, however, the int limit in java is 2,147,483,647
         // and when the number when a number larger than the limit is stored, a
@@ -13,6 +15,8 @@ public class rec11_fib {
         // be used instead to store the val of large fib
 
     }
+
+    // signature must be diff for method overloading
 
     public static int fib(int n) {
         if (n == 0) {
@@ -26,5 +30,17 @@ public class rec11_fib {
             second = temp;
         }
         return second;
+    }
+
+    public static int fib(int n, int m) {
+        if (n <= 0) {
+            return 0;
+        }
+
+        if (n == 1) {
+            return 1;
+        }
+
+        return fib(n - 1, 0) + fib(n - 2, 0);
     }
 }
