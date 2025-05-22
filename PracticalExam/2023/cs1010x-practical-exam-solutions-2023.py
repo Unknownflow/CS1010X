@@ -1,10 +1,12 @@
-#----------------
+# ----------------
 #    TOPIC 1
-#----------------
+# ----------------
 
 # Question 1
 
 count = 0
+
+
 def record(f):
     def helper(*args):
         global count
@@ -12,7 +14,8 @@ def record(f):
         return f(*args)
     return helper
 
-@record # include this line in your submission
+
+@record  # include this line in your submission
 def jump_locate(aList, begin, end, jump, num_to_find):
     if begin + jump > end:
         return 'Not Found'
@@ -22,7 +25,7 @@ def jump_locate(aList, begin, end, jump, num_to_find):
         return begin + jump
     elif aList[begin + jump] < num_to_find:
         begin = begin + jump + 1
-        if begin + jump * 2  <= end:
+        if begin + jump * 2 <= end:
             return jump_locate(aList, begin, end, jump * 2, num_to_find)
         else:
             return jump_locate(aList, begin, end, 1, num_to_find)
@@ -39,9 +42,9 @@ def jump_locate(aList, begin, end, jump, num_to_find):
 # print(count)
 
 
-#----------------
+# ----------------
 #    TOPIC 2
-#----------------
+# ----------------
 
 def print_tree(tree):
     """Function to print a binary tree in friendly format. Do not modify."""
@@ -55,7 +58,8 @@ def print_tree(tree):
         rtree, rwidth, rpos = to_str(tree[2])
         _lst = [' ' * lwidth + f'({tree[0]:03d})' + ' ' * rwidth]
         line = (' ' * lpos + '+' + '-' * (lwidth - lpos + 1) + '+' if lwidth else '  +') \
-            + ('-' * (rpos + 2) + '+' + ' ' * (rwidth - rpos - 1) if rwidth else '  ')
+            + ('-' * (rpos + 2) + '+' + ' ' *
+               (rwidth - rpos - 1) if rwidth else '  ')
         _lst.append(line)
         for i in range(max(len(ltree), len(rtree))):
             line = (ltree[i] if i < len(ltree) else ' ' * lwidth) + ' ' * 5 \
@@ -69,14 +73,17 @@ def print_tree(tree):
     except:
         print('Something went wrong. Your input might be invalid.')
 
+
 TreeTuples = []
-TreeTuples.append(((8, -1, 6), (7, 4, 9), (5, 1, 2), (1, 7, -1), (2, 3, 8), (3, -1, 0)))
+TreeTuples.append(((8, -1, 6), (7, 4, 9), (5, 1, 2),
+                  (1, 7, -1), (2, 3, 8), (3, -1, 0)))
 TreeTuples.append(((0, 1, 2),))
-TreeTuples.append(((0, 2, -1),(1, 0, -1)))
-TreeTuples.append(((2, -1, 0),(0, -1, 1)))
-TreeTuples.append(((0, 3, 2),(1, 4, 0)))
+TreeTuples.append(((0, 2, -1), (1, 0, -1)))
+TreeTuples.append(((2, -1, 0), (0, -1, 1)))
+TreeTuples.append(((0, 3, 2), (1, 4, 0)))
 
 # Question 2
+
 
 def find_root(iTuple):
     parent = set()
@@ -94,10 +101,12 @@ def find_root(iTuple):
 
 # Question 3
 
+
 def binary_tree(iTuple):
     children = {}
     for a, b, c in iTuple:
         children[a] = (b, c)
+
     def helper(node):
         if children.get(node, (-1, -1)) == (-1, -1):
             return (node, (), ())
@@ -112,14 +121,14 @@ def binary_tree(iTuple):
     return helper(root)
 
 # for iTuple in TreeTuples:
-#     tree = binary_tree(iTuple) 
+#     tree = binary_tree(iTuple)
 #     print(tree)
 #     print_tree(tree)
 
 
-#----------------
+# ----------------
 #    TOPIC 3
-#----------------
+# ----------------
 
 # Question 4
 
@@ -136,7 +145,7 @@ class Tribes():
             return self.tribe_leader(self.parent[A])
 
     def conquer(self, A, B):
-        self.parent[B] = A 
+        self.parent[B] = A
 
     def is_same_tribe(self, A, B):
         return self.tribe_leader(A) == self.tribe_leader(B)
@@ -154,9 +163,9 @@ class Tribes():
 # testTribes()
 
 
-#----------------
+# ----------------
 #    TOPIC 4
-#----------------
+# ----------------
 
 # Question 5
 
@@ -179,6 +188,7 @@ def subtree_distance(tree):
 
 # Question 6
 
+
 def tree_distance(tree):
     n = len(tree)
     children = [[] for i in range(n)]
@@ -199,10 +209,12 @@ def tree_distance(tree):
             res[i] = max(res[i], outside_distances[i])
             if i == children[parent][0]:
                 res[i] = max(res[i], 1 + subtree_distances[parent][1])
-                outside_distances[i] = max(outside_distances[i], 1 + subtree_distances[parent][1])
+                outside_distances[i] = max(
+                    outside_distances[i], 1 + subtree_distances[parent][1])
             else:
                 res[i] = max(res[i], 1 + subtree_distances[parent][0])
-                outside_distances[i] = max(outside_distances[i], 1 + subtree_distances[parent][0])
+                outside_distances[i] = max(
+                    outside_distances[i], 1 + subtree_distances[parent][0])
         for child in children[i]:
             helper(child)
 
@@ -216,17 +228,37 @@ def tree_distance(tree):
 # print(tree_distance([-1, 0, 0, 1, 2, 3, 4]))
 
 
-#----------------
+# ----------------
 #    TOPIC 5
-#----------------
+# ----------------
 
 # Question 7
 def count_bugles(n, m):
     res = 0
     for i in range(n):
         for j in range(m):
-            res += 4 * min(i, j) + 2 * min(i, j, m - j - 1) + 2 * min(j, i, n - i - 1)
+            res += 4 * min(i, j) + 2 * min(i, j, m - j - 1) + \
+                2 * min(j, i, n - i - 1)
+            print(i, j, res)
     return res
 
-# print(count_bugles(3, 3))
-# print(count_bugles(4, 5))
+
+def count_bugles(n, m):
+    count = 0
+    max_len = min(n, m)
+
+    # Horizontal-Vertical aligned Bugles (4 orientations)
+    for l in range(1, max_len):
+        count += (n - l) * (m - l) * 4
+
+    # Diagonal aligned Bugles (diamond-like)
+    for l in range(1, min(n, m)):
+        count += (n - 2 * l) * (m - 2 * l) * \
+            4 if n >= 2 * l and m >= 2 * l else 0
+
+    return count
+
+
+print(count_bugles(3, 3))
+print()
+print(count_bugles(4, 5))
