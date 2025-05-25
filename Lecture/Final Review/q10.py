@@ -1,17 +1,19 @@
 def make_stack():
-  stack = []
-  def helper(command, *args):
-    if command == "push":
-      stack.append(args[0])
-      return None
-    elif command == "size":
-      return len(stack)
-    elif command == "peek":
-      return stack[-1]
-    elif command == "pop":
-      popped = stack.pop()
-      return popped
-  return helper
+    stack = []
+
+    def helper(command, *args):
+        if command == "push":
+            stack.append(args[0])
+            return None
+        elif command == "size":
+            return len(stack)
+        elif command == "peek":
+            return stack[-1]
+        elif command == "pop":
+            popped = stack.pop()
+            return popped
+    return helper
+
 
 def prefix_infix(expr):
     stack = make_stack()
@@ -41,6 +43,28 @@ def prefix_infix(expr):
     return stack("pop")
 
 
-print(prefix_infix (['+', ['*', 5, 4], ['-', 2, 1]]))
+def prefix_infix(expr):
+    stack = make_stack()
 
-print(prefix_infix(['-',['*',5,4],['-',['/',1,45],['+',1,1]]]))
+    for op in expr:
+        if op in ["*", "/", "+", "-"]:
+            stack("push", str(op))
+        elif stack("peek") in ["*", "/", "+", "-"]:
+            stack("push", str(op))
+        else:
+            tmp = "(" + stack("pop") + stack("pop") + str(op) + ")"
+            while stack("size") > 0 and stack("peek") not in ["*", "/", "+", "-"]:
+                tmp = "(" + stack("pop") + stack("pop") + tmp + ")"
+            stack("push", tmp)
+
+    while stack("size") > 1:
+        back = stack("pop")
+        front = stack("pop")
+        stack("push", "(" + front + stack("pop") + back + ")")
+
+    return stack("pop")
+
+
+print(prefix_infix(['+', ['*', 5, 4], ['-', 2, 1]]))
+
+print(prefix_infix(['-', ['*', 5, 4], ['-', ['/', 1, 45], ['+', 1, 1]]]))
