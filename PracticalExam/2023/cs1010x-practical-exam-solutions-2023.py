@@ -235,28 +235,13 @@ def tree_distance(tree):
 # Question 7
 def count_bugles(n, m):
     res = 0
-    for i in range(n):
-        for j in range(m):
+    for i in range(1, n):
+        for j in range(1, m):
             res += 4 * min(i, j) + 2 * min(i, j, m - j - 1) + \
                 2 * min(j, i, n - i - 1)
-            print(i, j, res)
+            print(i, j, ":", 4 * min(i, j), 2 * min(i, j, m - j - 1),
+                  2 * min(j, i, n - i - 1))
     return res
-
-
-def count_bugles(n, m):
-    count = 0
-    max_len = min(n, m)
-
-    # Horizontal-Vertical aligned Bugles (4 orientations)
-    for l in range(1, max_len):
-        count += (n - l) * (m - l) * 4
-
-    # Diagonal aligned Bugles (diamond-like)
-    for l in range(1, min(n, m)):
-        count += (n - 2 * l) * (m - 2 * l) * \
-            4 if n >= 2 * l and m >= 2 * l else 0
-
-    return count
 
 
 print(count_bugles(3, 3))
