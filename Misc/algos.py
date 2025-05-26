@@ -16,6 +16,60 @@ def binary_search(key, seq):  # seq is sorted.
 # Space: O(logn) recursive / O(1) if non recursive
 
 
+a = [6, 2, 1, 7, 4, 5, 9]
+
+
+def bubble_sort(lst):
+    swaps = True
+
+    while swaps:
+        swaps = False
+        for i in range(len(lst)-1):
+            if lst[i] > lst[i+1]:
+                tmp = lst[i]
+                lst[i] = lst[i+1]
+                lst[i+1] = tmp
+                swaps = True
+
+    return lst
+
+
+def bubble_sort(arr):
+    # Outer loop to iterate through the list n times
+    for n in range(len(arr) - 1, 0, -1):
+        # Initialize swapped to track if any swaps occur
+        swapped = False
+        # Inner loop to compare adjacent elements
+        for i in range(n):
+            if arr[i] > arr[i + 1]:
+                # Swap elements if they are in the wrong order
+                arr[i], arr[i + 1] = arr[i + 1], arr[i]
+                # Mark that a swap has occurred
+                swapped = True
+
+        # If no swaps occurred, the list is already sorted
+        if not swapped:
+            break
+
+    return arr
+
+
+def insertionSort(arr):
+    for i in range(1, len(arr)):
+        key = arr[i]
+        j = i - 1
+
+        # Move elements of arr[0..i-1], that are
+        # greater than key, to one position ahead
+        # of their current position
+        while j >= 0 and key < arr[j]:
+            arr[j + 1] = arr[j]
+            j -= 1
+        arr[j + 1] = key
+
+    return arr
+
+
 def selection_sort(array):
     for ind in range(len(array)):
         min_index = ind
@@ -106,3 +160,54 @@ def transpose(mat):
             transposed[col_idx][row_idx] = mat[row_idx][col_idx]
 
     return transposed
+
+
+def bfs(root):
+    queue = [root]
+    while queue:
+        node = queue.pop(0)
+        for i in node.children:
+            queue.append(i)
+
+# find shortest path
+# count components in disconnected graph
+
+
+def dfs(node):
+    if not node:
+        return
+    else:
+        for i in node.children:
+            dfs(i)
+
+# topological sort
+# counting strongly connected components
+# pre/in/post order traversal
+# probs that require backtracking
+
+
+def islands(map):
+    DIRECTION = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+
+    def explore(row, col):
+        queue = [(row, col)]
+        while queue:
+            x, y = queue.pop(0)
+            if map[x][y] == "X":
+                continue
+            map[x][y] = "V"
+            for d in DIRECTION:
+                new_x = x + d[0]
+                new_y = y + d[1]
+                if 0 <= new_x < len(map) and 0 <= new_y < len(map[0]):
+                    queue.append((new_x, new_y))
+        return 1
+
+    ans = 0
+    for r in range(len(map)):
+        for c in range(len(map[0])):
+            if map[r][c] == "X":
+                explore(r, c)
+                ans += 1
+
+    return ans
