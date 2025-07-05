@@ -1,3 +1,3 @@
-# CS1010X 2024/2025
+# CS1010X
 
-## This contains all of my code for CS1010X
+This contains all of my assignments and tasks from CS1010X IBLOC.
