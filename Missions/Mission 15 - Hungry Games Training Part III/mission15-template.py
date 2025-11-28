@@ -11,8 +11,8 @@ from engine import *
 import simulation
 import random
 
-# Rename CLARENCE_AI to YourName_AI
-class CLARENCE_AI(Tribute):
+# Rename NAME_AI to YourName_AI
+class NAME_AI(Tribute):
 
     def __init__(self, name, health):
         super().__init__(name, health)
@@ -123,8 +123,8 @@ class CLARENCE_AI(Tribute):
 
 # NOTE: DO NOT remove the 2 lines of code below.
 #
-# In particular, you will need to modify the `your_AI = CLARENCE_AI` line so that
-# `CLARENCE_AI` is the name of your AI class.
+# In particular, you will need to modify the `your_AI = NAME_AI` line so that
+# `NAME_AI` is the name of your AI class.
 # For instance, if your AI class is called `MyPrecious_AI`, then you have to
 # modify that line to:
 #
@@ -139,7 +139,7 @@ class CLARENCE_AI(Tribute):
 #
 # You have been warned!
 time_limit = 50 # Modify if your AI needs more than 50 moves for task 2
-your_AI = CLARENCE_AI # Modify if you changed the name of the AI class
+your_AI = NAME_AI # Modify if you changed the name of the AI class
 
 
 ##################
@@ -153,9 +153,9 @@ your_AI = CLARENCE_AI # Modify if you changed the name of the AI class
 # 2. Your AI should be able to kill chicken
 # 3. Your AI should be able to pick up chicken_meat after killing chicken
 
-# Replace CLARENCE_AI with the class name of your AI
+# Replace NAME_AI with the class name of your AI
 # Replace gui=True with gui=False if you do not wish to see the GUI
-# simulation.task1(CLARENCE_AI("CLARENCE AI", 100), gui=True)
+# simulation.task1(NAME_AI("NAME AI", 100), gui=True)
 
 
 ##########
@@ -165,11 +165,11 @@ your_AI = CLARENCE_AI # Modify if you changed the name of the AI class
 ## 2. Your AI should be able to move around and explore
 ## 3. Your AI should be able to find harmless Tribute and kill him
 
-# Replace CLARENCE_AI with the class name of your AI
+# Replace NAME_AI with the class name of your AI
 # Replace gui=True with gui=False if you do not wish to see the GUI
 
 time_limit = 20    # You may change the time limit if your AI is taking too long
-simulation.task2(CLARENCE_AI("XX AI", 100), time_limit, gui=True)
+simulation.task2(NAME_AI("XX AI", 100), time_limit, gui=True)
 
 
 
@@ -204,11 +204,11 @@ def config():
     game.add_tribute(soedar)
 
     # Yes, your AI can fight with himself
-    #ai_clone = CLARENCE_AI("AI Clone", 100)
+    #ai_clone = NAME_AI("AI Clone", 100)
     #game.add_tribute(ai_clone)
 
     return game
 
-# Replace CLARENCE_AI with the class name of your AI
+# Replace NAME_AI with the class name of your AI
 # Replace gui=True with gui=False if you do not wish to see the GUI
-# simulation.optional_task(CLARENCE_AI("XX AI", 100), config, gui=True)
+# simulation.optional_task(NAME_AI("XX AI", 100), config, gui=True)
